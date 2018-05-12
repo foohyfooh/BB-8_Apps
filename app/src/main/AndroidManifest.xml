@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.foohyfooh.bb8">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".notifications.NotificationsActivity"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".notifications.ConfigureActivity"
+            android:screenOrientation="portrait"/>
+        <service
+            android:name=".notifications.BB8CommandService"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="com.foohyfooh.bb8.notifications.action.FLASH" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".notifications.NotificationListener"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+        <activity android:name=".voice_commands.VoiceCommandsActivity" />
+        <service
+            android:name=".voice_commands.BB8CommandService"
+            android:enabled="true">
+        </service>
+    </application>
+
+</manifest>

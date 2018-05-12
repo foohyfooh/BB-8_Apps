@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">BB-8 Apps</string>
+    <string name="notifications_name">BB-8 Notifications</string>
+    <string name="notifications_sendNotification">Send Notification</string>
+    <string name="status_connected">Connected to %s</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="button_enable">Enable</string>
+    <string name="button_configure">Configure</string>
+    <string name="button_disable">Disable</string>
+    <string name="icon_description">%s App Icon</string>
+    <string name="hint_colour">Colour</string>
+    <string name="hint_pattern">Pattern</string>
+    <string name="notification_access_title">Enable Notification Access</string>
+    <string name="notification_access_message">This app needs this to be able to check notifications to work.</string>
+    <string name="cancel">Cancel</string>
+    <string name="enable">Enable</string>
+    <string name="location_access_title">Enable Location Access</string>
+    <string name="location_access_message">Android 6.0 and higher require the Location Services for Bluetooth Access.</string>
+    <string name="voiceCommands_name">BB-8 Voice Commands</string>
+    <string name="voiceCommands_issueCommand">Issue Command</string>
+</resources>

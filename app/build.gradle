@@ -1,0 +1,63 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+    compileSdkVersion 26
+    defaultConfig {
+        applicationId "com.foohyfooh.bb8"
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+        resConfig "en"
+    }
+    buildTypes {
+        release {
+            shrinkResources true
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        targetCompatibility 1.8
+        sourceCompatibility 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    def support_version = "26.1.0"
+    implementation "com.android.support:appcompat-v7:$support_version"
+    implementation "com.android.support:support-compat:$support_version"
+    implementation "com.android.support:design:$support_version"
+    implementation 'com.android.support.constraint:constraint-layout:1.1.0'
+    implementation 'org.apache.commons:commons-lang3:3.4'
+    implementation 'com.pes.materialcolorpicker:library:1.0.2'
+
+
+//    def lifecycle_version = "1.1.1"
+//    // ViewModel and LiveData
+//    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+//    // alternatively - just ViewModel
+//    implementation "android.arch.lifecycle:viewmodel:$lifecycle_version" // use -ktx for Kotlin
+//    // alternatively - just LiveData
+//    implementation "android.arch.lifecycle:livedata:$lifecycle_version"
+//    // alternatively - Lifecycles only (no ViewModel or LiveData).
+//    //     Support library depends on this lightweight import
+//    implementation "android.arch.lifecycle:runtime:$lifecycle_version"
+//    annotationProcessor "android.arch.lifecycle:compiler:$lifecycle_version"
+//    // alternately - if using Java8, use the following instead of compiler
+//    implementation "android.arch.lifecycle:common-java8:$lifecycle_version"
+//    // optional - ReactiveStreams support for LiveData
+//    implementation "android.arch.lifecycle:reactivestreams:$lifecycle_version"
+
+    def room_version = "1.1.0"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    // optional - RxJava support for Room
+    implementation "android.arch.persistence.room:rxjava2:$room_version"
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation "android.arch.persistence.room:guava:$room_version"
+}

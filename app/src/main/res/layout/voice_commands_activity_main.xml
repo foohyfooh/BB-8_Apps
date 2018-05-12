@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.foohyfooh.bb8.voice_commands.VoiceCommandsActivity">
+
+    <TextView
+        android:id="@+id/voiceCommands_connectionStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/status_disconnected"/>
+
+    <Button
+        android:id="@+id/voiceCommands_issueCommand"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/voiceCommands_issueCommand" />
+
+</LinearLayout>
