@@ -18,4 +18,6 @@
     <string name="location_access_message">Android 6.0 and higher require the Location Services for Bluetooth Access.</string>
     <string name="voiceCommands_name">BB-8 Voice Commands</string>
     <string name="voiceCommands_issueCommand">Issue Command</string>
+    <string name="notificationChannel_default_name">Default</string>
+    <string name="notificationChannel_default_description">Default Notifications</string>
 </resources>

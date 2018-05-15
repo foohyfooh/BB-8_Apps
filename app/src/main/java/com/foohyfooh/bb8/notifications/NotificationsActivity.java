@@ -1,6 +1,7 @@
 package com.foohyfooh.bb8.notifications;
 
 import android.Manifest;
+import android.app.Notification;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ComponentName;
 import android.content.Context;
@@ -12,7 +13,6 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,12 +35,14 @@ public class NotificationsActivity extends AppCompatActivity implements BB8Comma
     private static final int REQUEST_CODE_LOCATION_PERMISSION = 1;
     private static final int REQUEST_CODE_BLUETOOTH = 2;
     private static final String TAG = "NotificationsActivity";
+    private static final int NOTIFICATION_ID = 1;
 
     private TextView connectionStatus;
     private boolean mIsBound, bluetoothNotDenied = true;
     private BB8CommandService bb8CommandService;
     private ServiceConnection serviceConnection;
     private AppInfoAdapter adapter;
+    private NotificationHelper notificationHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +65,12 @@ public class NotificationsActivity extends AppCompatActivity implements BB8Comma
         adapter = new AppInfoAdapter(this);
         recyclerView.setAdapter(adapter);
 
+        notificationHelper = new NotificationHelper(this);
         findViewById(R.id.notifications_sendNotification).setOnClickListener(view -> {
             if(bb8CommandService != null){
                 Log.d(TAG, "BB8 Command Service is not Null");
-                bb8CommandService.startForeground(1, new NotificationCompat.Builder(view.getContext())
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(getText(R.string.app_name))
-                        .build());
+                Notification notification = notificationHelper.makeNotification(NotificationHelper.CHANNEL_DEFAULT, "Sample Notification");
+                notificationHelper.postNotification(NOTIFICATION_ID, notification);
             }else{
                 Log.d(TAG, "BB8 Command Service is Null");
             }
