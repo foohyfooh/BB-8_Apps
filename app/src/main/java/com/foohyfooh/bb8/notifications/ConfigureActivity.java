@@ -47,7 +47,7 @@ public class ConfigureActivity extends AppCompatActivity {
         final Button changeColour = findViewById(R.id.configure_colour);
         changeColour.setBackgroundColor(Color.parseColor(config.getHexColour()));
 
-        int[] rgbColours = ColourUtils.INSTANCE.extractColoursToArray(config.getHexColour());
+        int[] rgbColours = ColourUtils.extractColoursToArray(config.getHexColour());
         final ColorPicker colorPicker = new ColorPicker(this, rgbColours[0], rgbColours[1], rgbColours[2]);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -58,9 +58,9 @@ public class ConfigureActivity extends AppCompatActivity {
                     Button ok = colorPicker.findViewById(R.id.okColorButton);
                     ok.setOnClickListener(this);
                 }else if(view.getId() == R.id.okColorButton){
-                    String hexColour = "#" + ColourUtils.INSTANCE.intToHex(colorPicker.getRed()) +
-                            ColourUtils.INSTANCE.intToHex(colorPicker.getGreen()) +
-                            ColourUtils.INSTANCE.intToHex(colorPicker.getBlue());
+                    String hexColour = "#" + ColourUtils.intToHex(colorPicker.getRed()) +
+                            ColourUtils.intToHex(colorPicker.getGreen()) +
+                            ColourUtils.intToHex(colorPicker.getBlue());
                     Log.d("AppInfoAdapter", "Hex Colour " + hexColour);
                     colorPicker.dismiss();
                     changeColour.setBackgroundColor(colorPicker.getColor());
@@ -70,10 +70,13 @@ public class ConfigureActivity extends AppCompatActivity {
         };
         changeColour.setOnClickListener(onClickListener);
 
-        String[] patterns = {"Flash"};
+        String[] patterns = {"Blink", "Fade"};
         Spinner pattern = findViewById(R.id.configure_pattern);
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Arrays.asList(patterns));
         pattern.setAdapter(adapter);
+
+        if(config.getPattern().equals(BB8CommandService.ACTION_BLINK)) pattern.setSelection(0);
+        else if(config.getPattern().equals(BB8CommandService.ACTION_FADE)) pattern.setSelection(1);
 
         pattern.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -84,8 +87,8 @@ public class ConfigureActivity extends AppCompatActivity {
                     case "Blink":
                         config.setPattern(BB8CommandService.ACTION_BLINK);
                         break;
-                    case "Flash":
-                        config.setPattern(BB8CommandService.ACTION_FLASH);
+                    case "Fade":
+                        config.setPattern(BB8CommandService.ACTION_FADE);
                         break;
                 }
             }

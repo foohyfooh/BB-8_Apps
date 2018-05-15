@@ -9,6 +9,12 @@
     android:gravity="center"
     tools:context=".MainActivity">
 
+    <TextView
+        android:id="@+id/main_connectionStatus"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/status_disconnected"/>
+
     <Button
         android:id="@+id/main_gotoNotifications"
         android:layout_width="wrap_content"

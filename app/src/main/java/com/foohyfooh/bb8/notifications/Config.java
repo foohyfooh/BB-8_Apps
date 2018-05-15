@@ -59,7 +59,7 @@ public class Config {
         this.pattern = pattern;
     }
 
-    @StringDef({BB8CommandService.ACTION_BLINK, BB8CommandService.ACTION_FLASH})
+    @StringDef({BB8CommandService.ACTION_BLINK, BB8CommandService.ACTION_FLASH, BB8CommandService.ACTION_FADE})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Pattern{}
 

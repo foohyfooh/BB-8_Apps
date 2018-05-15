@@ -22,7 +22,7 @@ public class NotificationListener extends NotificationListenerService {
             Log.d(TAG, "onNotificationPosted: Changing Colour for " + sbn.getPackageName());
             Intent serviceIntent = new Intent(this, BB8CommandService.class);
             serviceIntent.setAction(config.getPattern());
-            serviceIntent.putExtra(BB8CommandService.EXTRA_COLOUR, ColourUtils.INSTANCE.extractColoursToArray(config.getHexColour()));
+            serviceIntent.putExtra(BB8CommandService.EXTRA_COLOUR, ColourUtils.extractColoursToArray(config.getHexColour()));
             getApplicationContext().startService(serviceIntent);
         }
     }
