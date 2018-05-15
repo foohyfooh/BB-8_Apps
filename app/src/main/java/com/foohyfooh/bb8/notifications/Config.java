@@ -7,6 +7,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringDef;
 
+import com.foohyfooh.bb8.BB8CommandService;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

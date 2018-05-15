@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 
+import com.foohyfooh.bb8.BB8CommandService;
 import com.foohyfooh.bb8.R;
 import com.foohyfooh.bb8.utils.ColourUtils;
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
@@ -46,7 +47,7 @@ public class ConfigureActivity extends AppCompatActivity {
         final Button changeColour = findViewById(R.id.configure_colour);
         changeColour.setBackgroundColor(Color.parseColor(config.getHexColour()));
 
-        int[] rgbColours = ColourUtils.extractColoursToArray(config.getHexColour());
+        int[] rgbColours = ColourUtils.INSTANCE.extractColoursToArray(config.getHexColour());
         final ColorPicker colorPicker = new ColorPicker(this, rgbColours[0], rgbColours[1], rgbColours[2]);
 
         View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -57,9 +58,9 @@ public class ConfigureActivity extends AppCompatActivity {
                     Button ok = colorPicker.findViewById(R.id.okColorButton);
                     ok.setOnClickListener(this);
                 }else if(view.getId() == R.id.okColorButton){
-                    String hexColour = "#" + ColourUtils.intToHex(colorPicker.getRed()) +
-                            ColourUtils.intToHex(colorPicker.getGreen()) +
-                            ColourUtils.intToHex(colorPicker.getBlue());
+                    String hexColour = "#" + ColourUtils.INSTANCE.intToHex(colorPicker.getRed()) +
+                            ColourUtils.INSTANCE.intToHex(colorPicker.getGreen()) +
+                            ColourUtils.INSTANCE.intToHex(colorPicker.getBlue());
                     Log.d("AppInfoAdapter", "Hex Colour " + hexColour);
                     colorPicker.dismiss();
                     changeColour.setBackgroundColor(colorPicker.getColor());
@@ -90,9 +91,7 @@ public class ConfigureActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
         Button disable = findViewById(R.id.configure_disable);

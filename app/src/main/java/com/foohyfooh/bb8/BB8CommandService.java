@@ -1,7 +1,6 @@
-package com.foohyfooh.bb8.voice_commands;
+package com.foohyfooh.bb8;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +9,6 @@ import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.foohyfooh.bb8.utils.ColourUtils;
 import com.orbotix.ConvenienceRobot;
 import com.orbotix.common.DiscoveryAgent;
 import com.orbotix.common.DiscoveryAgentEventListener;
@@ -23,7 +21,6 @@ import com.orbotix.le.RobotLE;
 import com.orbotix.le.RobotRadioDescriptor;
 import com.orbotix.macro.MacroObject;
 import com.orbotix.macro.cmd.Delay;
-import com.orbotix.macro.cmd.Fade;
 import com.orbotix.macro.cmd.LoopEnd;
 import com.orbotix.macro.cmd.LoopStart;
 import com.orbotix.macro.cmd.RGB;
@@ -36,14 +33,15 @@ public class BB8CommandService extends Service implements RobotChangedStateListe
         DiscoveryAgentEventListener, DiscoveryStateChangedListener {
 
     private static final String TAG = "BB8CommandService";
-    public static final String ACTION_MOVE = "com.foohyfooh.bb8.voice_commands.MOVE";
-    public static final String ACTION_SPIN = "com.foohyfooh.bb8.voice_commands.SPIN";
-    public static final String ACTION_STOP = "com.foohyfooh.bb8.voice_commands.STOP";
-    public static final String ACTION_FLASH = "com.foohyfooh.bb8.voice_commands.FLASH";
-    public static final String ACTION_BLINK = "com.foohyfooh.bb8.voice_commands.BLINK";
-    public static final String ACTION_FADE = "com.foohyfooh.bb8.voice_commands.FADE";
-    public static final String EXTRA_COLOUR = "colour";
+
+    public static final String ACTION_BLINK = "com.foohyfooh.bb8.action.BLINK";
+    public static final String ACTION_FLASH = "com.foohyfooh.bb8.action.FLASH";
+    public static final String ACTION_MOVE = "com.foohyfooh.bb8.MOVE";
+    public static final String ACTION_SPIN = "com.foohyfooh.bb8.SPIN";
+    public static final String ACTION_STOP = "com.foohyfooh.bb8.STOP";
+    public static final String ACTION_FADE = "com.foohyfooh.bb8.FADE";
     public static final String EXTRA_DIRECTION = "direction";
+    public static final String EXTRA_COLOUR = "colour";
     public static final String EXTRA_ANGLE = "angle";
 
     private IBinder binder = new BB8Binder();
@@ -53,7 +51,6 @@ public class BB8CommandService extends Service implements RobotChangedStateListe
     @Override
     public void onCreate() {
         super.onCreate();
-        if(DiscoveryAgentLE.getInstance() == null) return;
         DiscoveryAgentLE.getInstance().addRobotStateListener(this);
         DiscoveryAgentLE.getInstance().addDiscoveryListener(this);
         DiscoveryAgentLE.getInstance().addDiscoveryChangedStateListener(this);
@@ -61,12 +58,17 @@ public class BB8CommandService extends Service implements RobotChangedStateListe
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(bb8 == null) return START_NOT_STICKY;
         String action = intent.getAction();
         int angle = intent.getIntExtra(EXTRA_ANGLE, 0);
-        int[] colour = intent.getIntArrayExtra(EXTRA_COLOUR);
+        int[] colours = intent.getIntArrayExtra(EXTRA_COLOUR);
         switch (action){
-            case ACTION_MOVE: //Move for 5 seconds
+            case ACTION_BLINK:
+                blinkColour(colours[0], colours[1], colours[2]);
+                break;
+            case ACTION_FLASH:
+                blinkColour(colours[0], colours[1], colours[2]);
+                break;
+            case ACTION_MOVE: //Move for 2 seconds
                 MacroObject moveMacro = new MacroObject();
                 moveMacro.addCommand(new Roll(5f, angle, 0));
                 moveMacro.addCommand(new Delay(2000));
@@ -78,18 +80,9 @@ public class BB8CommandService extends Service implements RobotChangedStateListe
             case ACTION_STOP:
                 bb8.stop();
                 break;
-            case ACTION_FLASH:
-                break;
-            case ACTION_BLINK:
-                MacroObject blinkMacro = new MacroObject();
-                blinkMacro.addCommand(new LoopStart(15));
-                blinkMacro.addCommand(new RGB(colour[0], colour[1], colour[2], 1000));
-                blinkMacro.addCommand(new RGB(0, 0, 0, 1000));
-                blinkMacro.addCommand(new LoopEnd());
-                bb8.playMacro(blinkMacro);
-                break;
             case ACTION_FADE:
                 break;
+
         }
         return START_NOT_STICKY;
     }
@@ -108,22 +101,31 @@ public class BB8CommandService extends Service implements RobotChangedStateListe
         }
     }
 
-    private float[] extractColourFromIntent(Intent intent){
-        String colour = intent.getStringExtra(EXTRA_COLOUR);
-        int[] colours =  ColourUtils.extractColoursToArray(colour);
-        return new float[]{colours[0] / 255f, colours[1] / 255f, colours[2] / 255f};
+    public void changeColour(float red, float green, float blue){
+        if(bb8 != null){
+            bb8.setLed(red, green, blue);
+        }
     }
 
-    @SuppressLint("NewApi")
-    protected void start() {
+    public void blinkColour(int red, int green, int blue){
+        if(bb8 != null){
+            MacroObject blinkMacro = new MacroObject();
+            blinkMacro.addCommand(new LoopStart(15));
+            blinkMacro.addCommand(new RGB(red, green, blue, 1000));
+            blinkMacro.addCommand(new RGB(0, 0, 0, 1000));
+            blinkMacro.addCommand(new LoopEnd());
+            bb8.playMacro(blinkMacro);
+        }
+    }
+
+    public void start() {
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M ||
                 checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             startDiscovery();
         }
     }
 
-
-    protected void stop() {
+    public void stop() {
         //If the DiscoveryAgent is in discovery mode, stop it.
         if(DiscoveryAgentLE.getInstance().isDiscovering()) {
             DiscoveryAgentLE.getInstance().stopDiscovery();
@@ -139,7 +141,6 @@ public class BB8CommandService extends Service implements RobotChangedStateListe
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(DiscoveryAgentLE.getInstance() != null) return;
         DiscoveryAgentLE.getInstance().removeRobotStateListener(this);
         DiscoveryAgentLE.getInstance().removeDiscoveryListener(this);
         DiscoveryAgentLE.getInstance().removeDiscoveryChangedStateListener(this);
@@ -155,7 +156,14 @@ public class BB8CommandService extends Service implements RobotChangedStateListe
                 if (robot instanceof RobotLE) {
                     ((RobotLE) robot).setDeveloperMode(true);
                 }
+
                 bb8 = new ConvenienceRobot(robot);
+                break;
+            case Connecting:
+                Log.d(TAG, "State Changed to Connecting");
+                break;
+            case Connected:
+                Log.d(TAG, "State Changed to Connected");
                 break;
         }
         for (CommandListener commandListener : commandListeners) {

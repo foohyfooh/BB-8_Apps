@@ -5,6 +5,9 @@ import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.util.Log;
 
+import com.foohyfooh.bb8.BB8CommandService;
+import com.foohyfooh.bb8.utils.ColourUtils;
+
 public class NotificationListener extends NotificationListenerService {
         
     private static final String TAG = "NotificationListener";
@@ -19,7 +22,7 @@ public class NotificationListener extends NotificationListenerService {
             Log.d(TAG, "onNotificationPosted: Changing Colour for " + sbn.getPackageName());
             Intent serviceIntent = new Intent(this, BB8CommandService.class);
             serviceIntent.setAction(config.getPattern());
-            serviceIntent.putExtra(BB8CommandService.EXTRA_COLOUR, config.getHexColour());
+            serviceIntent.putExtra(BB8CommandService.EXTRA_COLOUR, ColourUtils.INSTANCE.extractColoursToArray(config.getHexColour()));
             getApplicationContext().startService(serviceIntent);
         }
     }

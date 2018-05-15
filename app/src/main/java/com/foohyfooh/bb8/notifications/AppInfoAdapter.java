@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.foohyfooh.bb8.R;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.AppInfoViewHolder> {
@@ -54,23 +53,17 @@ public class AppInfoAdapter extends RecyclerView.Adapter<AppInfoAdapter.AppInfoV
         }else{
             holder.enable.setVisibility(Button.VISIBLE);
             holder.configure.setVisibility(Button.GONE);
-            holder.enable.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    dao.insert(new Config(info.packageName));
-                    holder.enable.setVisibility(Button.GONE);
-                    holder.configure.setVisibility(Button.VISIBLE);
-                }
+            holder.enable.setOnClickListener(view -> {
+                dao.insert(new Config(info.packageName));
+                holder.enable.setVisibility(Button.GONE);
+                holder.configure.setVisibility(Button.VISIBLE);
             });
         }
 
-        holder.configure.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View view) {
-                Intent configureIntent = new Intent(context, ConfigureActivity.class);
-                configureIntent.putExtra(ConfigureActivity.EXTRA_PACKAGE_NAME, info.packageName);
-                context.startActivity(configureIntent);
-            }
+        holder.configure.setOnClickListener(view -> {
+            Intent configureIntent = new Intent(context, ConfigureActivity.class);
+            configureIntent.putExtra(ConfigureActivity.EXTRA_PACKAGE_NAME, info.packageName);
+            context.startActivity(configureIntent);
         });
     }
 

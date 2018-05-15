@@ -3,7 +3,7 @@ package com.foohyfooh.bb8;
 import android.app.Application;
 import android.os.Build;
 
-import com.foohyfooh.bb8.notifications.NotificationHelper;
+import com.foohyfooh.bb8.utils.NotificationHelper;
 
 public class BB8Application extends Application {
 

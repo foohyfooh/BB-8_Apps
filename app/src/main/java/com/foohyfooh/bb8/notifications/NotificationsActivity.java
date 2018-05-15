@@ -23,7 +23,9 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.foohyfooh.bb8.BB8CommandService;
 import com.foohyfooh.bb8.R;
+import com.foohyfooh.bb8.utils.NotificationHelper;
 import com.orbotix.common.DiscoveryAgent;
 import com.orbotix.common.Robot;
 
@@ -38,7 +40,7 @@ public class NotificationsActivity extends AppCompatActivity implements BB8Comma
     private static final int NOTIFICATION_ID = 1;
 
     private TextView connectionStatus;
-    private boolean mIsBound, bluetoothNotDenied = true;
+    private boolean serviceIsBound, bluetoothNotDenied = true;
     private BB8CommandService bb8CommandService;
     private ServiceConnection serviceConnection;
     private AppInfoAdapter adapter;
@@ -197,13 +199,13 @@ public class NotificationsActivity extends AppCompatActivity implements BB8Comma
             }
         };
         bindService(new Intent(this, BB8CommandService.class), serviceConnection, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
+        serviceIsBound = true;
     }
 
     void doUnbindService() {
-        if (mIsBound) {
+        if (serviceIsBound) {
             unbindService(serviceConnection);
-            mIsBound = false;
+            serviceIsBound = false;
         }
     }
 

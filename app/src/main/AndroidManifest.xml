@@ -28,7 +28,7 @@
         <activity android:name=".notifications.ConfigureActivity"
             android:screenOrientation="portrait"/>
         <service
-            android:name=".notifications.BB8CommandService"
+            android:name=".BB8CommandService"
             android:enabled="true">
             <intent-filter>
                 <action android:name="com.foohyfooh.bb8.notifications.action.FLASH" />
@@ -42,10 +42,6 @@
             </intent-filter>
         </service>
         <activity android:name=".voice_commands.VoiceCommandsActivity" />
-        <service
-            android:name=".voice_commands.BB8CommandService"
-            android:enabled="true">
-        </service>
     </application>
 
 </manifest>

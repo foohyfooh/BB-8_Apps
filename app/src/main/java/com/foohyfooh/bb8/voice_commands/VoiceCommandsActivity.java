@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.foohyfooh.bb8.BB8CommandService;
 import com.foohyfooh.bb8.R;
 import com.orbotix.common.DiscoveryAgent;
 import com.orbotix.common.Robot;
