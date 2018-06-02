@@ -6,7 +6,7 @@ Various tools built for Sphero BB-8 Droid.
 - Min SDK: 19
 - Target SDK: 26
 - Java Version: 1.8
-- Kotlin Version: 1.2.30
+- Kotlin Version: 1.2.41
 
 
 ## Sections

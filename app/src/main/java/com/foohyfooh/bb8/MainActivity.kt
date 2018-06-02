@@ -180,13 +180,9 @@ class MainActivity : AppCompatActivity(), DiscoveryListener {
         doUnbindService()
     }
 
-    override fun onDiscoveryDidStart(discoveryAgent: DiscoveryAgent?) {
+    override fun onDiscoveryDidStart(discoveryAgent: DiscoveryAgent?) {}
 
-    }
-
-    override fun handleRobotsAvailable(robots: MutableList<Robot>?) {
-
-    }
+    override fun handleRobotsAvailable(robots: MutableList<Robot>?) {}
 
     override fun handleRobotChangedState(robot: Robot?, type: RobotChangedStateListener.RobotChangedStateNotificationType?) {
         if (type == RobotChangedStateListener.RobotChangedStateNotificationType.Online) {
@@ -202,8 +198,6 @@ class MainActivity : AppCompatActivity(), DiscoveryListener {
         }
     }
 
-    override fun onDiscoveryDidStop(discoveryAgent: DiscoveryAgent?) {
-
-    }
+    override fun onDiscoveryDidStop(discoveryAgent: DiscoveryAgent?) {}
 
 }

@@ -7,7 +7,6 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
-import com.foohyfooh.bb8.MainActivity
 
 import com.foohyfooh.bb8.R
 
