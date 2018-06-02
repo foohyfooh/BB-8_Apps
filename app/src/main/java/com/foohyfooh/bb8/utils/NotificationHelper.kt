@@ -3,9 +3,11 @@ package com.foohyfooh.bb8.utils
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
 import android.os.Build
+import com.foohyfooh.bb8.MainActivity
 
 import com.foohyfooh.bb8.R
 
@@ -30,15 +32,21 @@ class NotificationHelper(context: Context) : ContextWrapper(context) {
         notificationManager.createNotificationChannel(defaultChannel)
     }
 
-    fun makeNotification(id: String, text: String): Notification {
+    fun makeNotification(id: String, text: String, pendingIntent: PendingIntent?): Notification {
         val builder = Notification.Builder(this)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(getText(R.string.app_name))
                 .setContentText(text)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             builder.setChannelId(id)
+        if (pendingIntent != null)
+            builder.setContentIntent(pendingIntent)
         return builder
                 .build()
+    }
+
+    fun makeNotification(id: String, text: String) : Notification {
+        return makeNotification(id, text, null)
     }
 
     fun postNotification(id: Int, notification: Notification) {

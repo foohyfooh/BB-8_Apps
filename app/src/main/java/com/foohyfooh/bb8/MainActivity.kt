@@ -2,6 +2,7 @@ package com.foohyfooh.bb8
 
 import android.Manifest
 import android.app.Activity
+import android.app.PendingIntent
 import android.bluetooth.BluetoothAdapter
 import android.content.ComponentName
 import android.content.Context
@@ -18,6 +19,7 @@ import android.util.Log
 import android.widget.Toast
 import com.foohyfooh.bb8.notifications.NotificationListener
 import com.foohyfooh.bb8.notifications.NotificationsActivity
+import com.foohyfooh.bb8.utils.NotificationHelper
 import com.foohyfooh.bb8.voice_commands.VoiceCommandsActivity
 import com.orbotix.common.DiscoveryAgent
 import com.orbotix.common.Robot
@@ -28,14 +30,19 @@ import java.util.ArrayList
 
 class MainActivity : AppCompatActivity(), DiscoveryListener {
 
-    private val TAG = "MainActivity"
-    private val REQUEST_CODE_LOCATION_PERMISSION = 1
-    private val REQUEST_CODE_BLUETOOTH = 2
+    companion object {
+        private const val FOREGROUND_NOTIFICATION = 1;
+        private const val TAG = "MainActivity"
+        private const val REQUEST_CODE_LOCATION_PERMISSION = 1
+        private const val REQUEST_CODE_BLUETOOTH = 2
+        private const val REQUEST_CODE_HOME_INTENT = 3
+    }
 
     private var serviceIsBound: Boolean = false
     private var bluetoothNotDenied = true
-    private var bb8CommandService: BB8CommandService? = null;
+    private var bb8CommandService: BB8CommandService? = null
     private var serviceConnection: ServiceConnection? = null
+    private var notificationHelper: NotificationHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,15 +56,14 @@ class MainActivity : AppCompatActivity(), DiscoveryListener {
             startActivity(Intent(this, VoiceCommandsActivity::class.java))
         }
 
+        notificationHelper = NotificationHelper(this)
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val hasLocationPermission = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-            if (hasLocationPermission != PackageManager.PERMISSION_GRANTED) {
-                //Log.e(TAG, "Location permission has not already been granted");
+            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 val permissions = ArrayList<String>()
                 permissions.add(Manifest.permission.ACCESS_COARSE_LOCATION)
                 requestPermissions(permissions.toTypedArray(), REQUEST_CODE_LOCATION_PERMISSION)
             } else {
-                //Log.d(TAG, "Location permission already granted");
                 doBindService()
             }
         } else {
@@ -169,10 +175,8 @@ class MainActivity : AppCompatActivity(), DiscoveryListener {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (bb8CommandService != null) {
-            bb8CommandService?.removeDiscoveryListener(this)
-            bb8CommandService?.stop()
-        }
+        bb8CommandService?.removeDiscoveryListener(this)
+        bb8CommandService?.stop()
         doUnbindService()
     }
 
@@ -186,9 +190,15 @@ class MainActivity : AppCompatActivity(), DiscoveryListener {
 
     override fun handleRobotChangedState(robot: Robot?, type: RobotChangedStateListener.RobotChangedStateNotificationType?) {
         if (type == RobotChangedStateListener.RobotChangedStateNotificationType.Online) {
-            main_connectionStatus.text = String.format(getString(R.string.status_connected), robot?.name)
+            val connectionText = String.format(getString(R.string.status_connected), robot?.name)
+            main_connectionStatus.text = connectionText
+            val homeIntent = Intent(this, MainActivity::class.java)
+            val pendingIntent = PendingIntent.getActivity(this, REQUEST_CODE_HOME_INTENT, homeIntent, 0)
+            val notification = notificationHelper?.makeNotification(NotificationHelper.CHANNEL_DEFAULT, connectionText, pendingIntent)
+            bb8CommandService?.startForeground(FOREGROUND_NOTIFICATION, notification)
         } else {
             main_connectionStatus.text = getString(R.string.status_disconnected)
+            bb8CommandService?.stopForeground(true)
         }
     }
 
